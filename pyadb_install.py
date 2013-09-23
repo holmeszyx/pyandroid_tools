@@ -8,6 +8,7 @@ import sys
 import os.path
 
 INSTALL_SUCCESS = 0
+INSTALL_FAILURE = -128
 INSTALL_FAILURE_EXIST = -1
 INSTALL_FAILURE_INCONSISTENT_CERTIFICATES = -2
 
@@ -70,6 +71,8 @@ def parse_error_reason(reason):
         return INSTALL_FAILURE_INCONSISTENT_CERTIFICATES
     elif reason == "INSTALL_FAILED_ALREADY_EXISTS":
         return INSTALL_FAILURE_EXIST
+    else:
+        return INSTALL_FAILURE
 
 
 
