@@ -12,6 +12,18 @@ INSTALL_FAILURE = -128
 INSTALL_FAILURE_EXIST = -1
 INSTALL_FAILURE_INCONSISTENT_CERTIFICATES = -2
 
+__ADB_PATH = None
+__AAPT_PATH = None
+
+def load_path_info():
+    """
+    Load path from somewhere
+    """
+    global __ADB_PATH 
+    __ADB_PATH = "/home/holmes/prosoft/android-sdk-linux/platform-tools/adb"
+    global __AAPT_PATH 
+    __AAPT_PATH = "/home/holmes/prosoft/android-sdk-linux/build-tools/17.0.0/aapt"
+
 def main():
     args = sys.argv 
     apk_file = None;
@@ -23,8 +35,11 @@ def main():
     if not os.path.isabs(apk_file):
         apk_file = os.path.abspath(apk_file)
 
-    _adb = adb.ADB("/home/holmes/prosoft/android-sdk-linux/platform-tools/adb")
+    # print(__ADB_PATH)
+    _adb = adb.ADB(__ADB_PATH)
     print("Try to install app %s" % apk_file)
+    # print(_adb.check_path())
+    # print(_adb.get_adb_path())
     result = install_apk(_adb, apk_file)
     if result == None:
         print("error for adb install")
@@ -34,7 +49,7 @@ def main():
     if install_result_code == 0:
         exit(0)
 
-    aapt_instance = AAPT("/home/holmes/prosoft/android-sdk-linux/build-tools/17.0.0/aapt")    
+    aapt_instance = AAPT(__AAPT_PATH)
     apk_info = aapt_instance.dump_badging(apk_file)
     apk_info_list = apk_info.split("\n")
     package_info = aapt_utils.parse_map(apk_info_list[0])
@@ -77,4 +92,5 @@ def parse_error_reason(reason):
 
 
 if __name__ == "__main__":
+    load_path_info()
     main()
